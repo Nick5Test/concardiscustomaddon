@@ -13,17 +13,17 @@ import java.util.Locale;
 
 @Data
 @com.testsigma.sdk.annotation.TestDataFunction(displayName = "Current month",
-        description = "restituisce il mese corrente")
+        description = "restituisce il mese due mesi fa")
 public class NexiPay_currentMonth extends TestDataFunction {
 
 
     @Override
     public TestData generate() throws Exception {
         YearMonth currentYearMonth = YearMonth.now();
-        YearMonth previousYearMonth = currentYearMonth.minusMonths(1);
-        Month previousMonth = previousYearMonth.getMonth();
+        YearMonth twoMonthsAgo = currentYearMonth.minusMonths(2);
+        Month twoMonthsAgoMonth = twoMonthsAgo.getMonth();
         Year currentYear = Year.of(currentYearMonth.getYear());
-        String monthName = previousMonth.toString();
+        String monthName = twoMonthsAgoMonth.toString();
         String year = currentYear.toString();
         System.out.println("Il mese corrente è: " + monthName.toUpperCase());
         String mese="";

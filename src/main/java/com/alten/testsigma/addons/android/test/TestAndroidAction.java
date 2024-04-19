@@ -2,6 +2,8 @@ package com.alten.testsigma.addons.android.test;
 
 import com.alten.testsigma.addons.android.CameraManagerNexipay;
 
+import com.alten.testsigma.addons.android.Old_Setk6;
+import com.alten.testsigma.addons.android.SetKey6Android;
 import com.testsigma.sdk.TestData;
 import com.testsigma.sdk.runners.ActionRunner;
 import io.appium.java_client.android.AndroidDriver;
@@ -41,11 +43,17 @@ public class TestAndroidAction {
     @Test
     public void prova() throws Exception {
 
-        CameraManagerNexipay action = new CameraManagerNexipay();
+        //CameraManagerNexipay action = new CameraManagerNexipay();
 
         /*action.setPan(new TestData("5255000048551676"));
         action.setPhoneNumber(new TestData("3482140383"));
         action.setPanAliasList(new TestData("0100000900257320"));*/
+
+
+        SetKey6Android action = new SetKey6Android();
+        action.setCf(new TestData("BRMBBA85S01F205R"));
+        action.setPan(new TestData("4532200085801459"));
+        action.setKey6(new TestData("613748"));
 
 
 

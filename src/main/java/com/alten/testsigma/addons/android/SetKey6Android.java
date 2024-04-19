@@ -1,59 +1,68 @@
-
 package com.alten.testsigma.addons.android;
 
-        import com.fasterxml.jackson.databind.JsonNode;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import com.testsigma.sdk.AndroidAction;
-        import com.testsigma.sdk.ApplicationType;
-        import com.testsigma.sdk.annotation.Action;
-        import com.testsigma.sdk.annotation.RunTimeData;
-        import com.testsigma.sdk.annotation.TestData;
-        import lombok.Data;
-        import okhttp3.*;
-        import org.json.JSONObject;
-        import org.openqa.selenium.NoSuchElementException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.testsigma.sdk.AndroidAction;
+import com.testsigma.sdk.ApplicationType;
+import com.testsigma.sdk.Result;
+import com.testsigma.sdk.annotation.Action;
+import com.testsigma.sdk.annotation.RunTimeData;
+import com.testsigma.sdk.annotation.TestData;
+import lombok.Data;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 
-        import javax.net.ssl.SSLContext;
-        import javax.net.ssl.TrustManager;
-        import javax.net.ssl.X509TrustManager;
-        import java.io.IOException;
-        import java.security.cert.CertificateException;
-        import java.security.cert.X509Certificate;
-
-
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Random;
 
 @Data
-@Action(actionText = "Old_Set Key6 with Pan and Cf ", applicationType = ApplicationType.ANDROID)
-public class Old_Setk6 extends AndroidAction {
+@Action(actionText = "Set Key6 with Pan and Cf ", applicationType = ApplicationType.ANDROID)
+public class SetKey6Android extends AndroidAction {
 
     @TestData(reference = "Pan")
     private com.testsigma.sdk.TestData pan;
+
     @TestData(reference = "Key6")
     private com.testsigma.sdk.TestData key6;
+
     @TestData(reference = "Cf")
     private com.testsigma.sdk.TestData cf;
 
     @RunTimeData
     private com.testsigma.sdk.RunTimeData runTimeData;
+    private String value;
 
     @Override
     public com.testsigma.sdk.Result execute() throws NoSuchElementException {
         //Your Awesome code starts here
         logger.info("Initiating execution");
         logger.info("PAN = " + pan.getValue().toString());
-        logger.info("KEY6 = " + key6.getValue().toString());
         logger.info("CF = " + cf.getValue().toString());
+        com.testsigma.sdk.Result result;
         String token = geToken();
-
         String responseSetkey6 = "";
 
+        for (int i = 0; i<6; i++) {
+            String keysix = generaStringa();
+            responseSetkey6 = setKey6(token,pan.getValue().toString(),cf.getValue().toString(), keysix);
+            System.out.println(responseSetkey6 + "---response "+ i + "Key6: " + keysix);
+        }
 
-         responseSetkey6 = setKey6(token,pan.getValue().toString(),cf.getValue().toString(),key6.getValue().toString());
-
+        responseSetkey6 = setKey6(token,pan.getValue().toString(),cf.getValue().toString(), key6.getValue().toString());
         System.out.println(responseSetkey6);
-
-        com.testsigma.sdk.Result result = com.testsigma.sdk.Result.SUCCESS;
-        setSuccessMessage("Utenze pulite correttamente");
+        if (responseSetkey6.contains("ERROR")) {
+            result = Result.FAILED;
+            setErrorMessage("ERRORE");
+        } else {
+            result = com.testsigma.sdk.Result.SUCCESS;
+            setSuccessMessage("Key 6 cambiato correttamente, valore: "+key6);
+        }
         return result;
     }
 
@@ -80,10 +89,12 @@ public class Old_Setk6 extends AndroidAction {
     }
 
     private String setKey6(String token, String pan, String cf, String key6) {
-        String StrResponse ="";
+        String StrResponse = null;
         OkHttpClient client = createCustomOkHttpClient();
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, "{\n  \"autoEnroll\": true,\n  \"cards\": [\n    {\n      \"cardId\": {\n        \"processor\": \"{{processor}}\",\n        \"type\": \"PAN\",\n        \"value\": "+pan+"\n      },\n      \"key6\": \""+key6+"\"\n    }\n  ],\n  \"cmpOwner\": \"NEXI\",\n  \"fiscalCode\": \""+cf+"\"\n}");
+        RequestBody body = RequestBody.create(mediaType, "{\n  \"autoEnroll\": true,\n  \"cards\": [\n    {\n      \"cardId\": " +
+                "{\n        \"processor\": \"{{processor}}\",\n        \"type\": \"PAN\",\n        \"value\": "+pan+"\n      },\n      \"key6\": \""+key6+"\"\n    }\n  " +
+                "],\n  \"cmpOwner\": \"NEXI\",\n  \"fiscalCode\": \""+cf+"\"\n}");
         Request request = new Request.Builder()
                 .url("https://stgmtissuing.private.nexicloud.it/mt-services/issuing/k6/v1/setK6")
                 .method("POST", body)
@@ -104,20 +115,29 @@ public class Old_Setk6 extends AndroidAction {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode responseNode = mapper.readTree(StrResponse);
             JsonNode enrolmentResNode = responseNode.get("enrollmentResults");
-            JsonNode enrollmentResultsNode = enrolmentResNode.get(0);
-            JsonNode resultDetailsNode = enrollmentResultsNode.get("resultDetails");
-            String description = resultDetailsNode.get("description").asText();
-            if(description.equals("The request was successfully processed")){
-                setSuccessMessage("The request was successfully processed");
-            }else{
-                System.out.println("ERROR, The request was NOT successfully processed");
-                setErrorMessage("ERROR, The request was NOT successfully processed");
-            }
 
+            if (enrolmentResNode != null && enrolmentResNode.isArray() && enrolmentResNode.size() > 0) {
+                JsonNode enrollmentResultsNode = enrolmentResNode.get(0);
+                JsonNode resultDetailsNode = enrollmentResultsNode.get("resultDetails");
+                String description = resultDetailsNode.get("description").asText();
+
+                if (description.equals("The request was successfully processed")) {
+                    logger.info("The request was successfully processed");
+                    value = "successfully";
+                } else {
+                    System.out.println("ERROR, The request was NOT successfully processed");
+                    logger.info("ERROR, The request was NOT successfully processed");
+                    value = "ERROR";
+                }
+            } else {
+                System.out.println("ERROR: Missing or invalid enrollmentResults in the response");
+                logger.info("ERROR: Missing or invalid enrollmentResults in the response");
+                value = "ERROR";
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        return StrResponse;
+        return value;
 
     }
 
@@ -152,5 +172,20 @@ public class Old_Setk6 extends AndroidAction {
                 .sslSocketFactory(sslContext.getSocketFactory(), customTrustManager)
                 .hostnameVerifier((hostname, session) -> true);
         return builder.build();
+    }
+
+    public static String generaStringa() {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int primoNumero = random.nextInt(9) + 1;  // Genera il primo numero casuale da 1 a 9
+        sb.append(primoNumero);
+        for (int i = 0; i < 5; i++) {
+            int numeroCasuale;
+            do {
+                numeroCasuale = random.nextInt(10);  // Genera numeri casuali da 0 a 9
+            } while (numeroCasuale == Character.getNumericValue(sb.charAt(sb.length() - 1)));  // Controlla che il numero casuale non sia uguale al precedente
+            sb.append(numeroCasuale);
+        }
+        return sb.toString();
     }
 }

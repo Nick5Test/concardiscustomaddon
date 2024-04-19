@@ -1,6 +1,4 @@
 package com.alten.testsigma.addons.generators.test;
-
-
 import com.alten.testsigma.addons.generators.CleanUserDevice;
 import com.alten.testsigma.addons.generators.NexiPay_newPwd;
 import com.testsigma.sdk.TestData;
@@ -9,7 +7,6 @@ import com.testsigma.sdk.runners.TestDataFunctionRunner;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +52,6 @@ public class ClearDevice {
             }
         }
     }
-
     @AfterClass
     public void teardown() {
     }
