@@ -1,13 +1,9 @@
 package com.alten.testsigma.addons.android.test;
 
-import com.alten.testsigma.addons.android.CameraManagerNexipay;
-
-import com.alten.testsigma.addons.android.Old_Setk6;
 import com.alten.testsigma.addons.android.SetKey6Android;
 import com.testsigma.sdk.TestData;
 import com.testsigma.sdk.runners.ActionRunner;
 import io.appium.java_client.android.AndroidDriver;
-
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -16,7 +12,7 @@ import org.testng.annotations.Test;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-public class TestAndroidAction {
+public class TestAndroidActionSamsungS21 {
     private ActionRunner runner;
     private AndroidDriver driver;
 
@@ -26,8 +22,8 @@ public class TestAndroidAction {
         DesiredCapabilities caps = new DesiredCapabilities();
 
         caps.setCapability("app", "C:\\NexiPay\\NEXIPay_7.9.1-mock-debugDexguard.apk");
-        caps.setCapability("deviceName", "huawei-ana_nx9-VWS0220428003258");
-        caps.setCapability("udid", "VWS0220428003258");
+        caps.setCapability("deviceName", "samsung-sm_g991b-R5CR92NRVNP");
+        caps.setCapability("udid", "R5CR92NRVNP");
         caps.setCapability("platformName", "android");
         caps.setCapability("noReset","true");
         caps.setCapability("fullReset","false");
