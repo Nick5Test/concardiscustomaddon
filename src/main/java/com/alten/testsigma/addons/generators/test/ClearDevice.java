@@ -37,7 +37,8 @@ public class ClearDevice {
                 "ttanexipay@gmail.com," +
                 "ptstg.excel.mc02@yopmail.com," +
                 "autom_52_00_00@yopmail.com," +
-                "automation_monoprod_zpay_0v0f@yopmail.com";
+                "automation_monoprod_zpay_0v0f@yopmail.com," +
+                "utenza75@yopmail.com";
 
         if(input.contains(",")){
             String [] parts = input.split(",");

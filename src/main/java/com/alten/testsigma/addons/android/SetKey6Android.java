@@ -54,7 +54,7 @@ public class SetKey6Android extends AndroidAction {
             System.out.println(responseSetkey6 + "---response "+ i + " Key6: " + keysix);
         }
 
-        responseSetkey6 = setKey6(token,pan.getValue().toString(),cf.getValue().toString(), key6.getValue().toString());
+        responseSetkey6 = setKey6(token,pan.getValue().toString(),cf.getValue().toString(),key6.getValue().toString());
         System.out.println(responseSetkey6);
         if (responseSetkey6.contains("ERROR")) {
             result = Result.FAILED;
@@ -115,21 +115,22 @@ public class SetKey6Android extends AndroidAction {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode responseNode = mapper.readTree(StrResponse);
             JsonNode enrolmentResNode = responseNode.get("enrollmentResults");
-
+            //controllo del json verifica della response
             if (enrolmentResNode != null && enrolmentResNode.isArray() && enrolmentResNode.size() > 0) {
                 JsonNode enrollmentResultsNode = enrolmentResNode.get(0);
                 JsonNode resultDetailsNode = enrollmentResultsNode.get("resultDetails");
                 String description = resultDetailsNode.get("description").asText();
-
                 if (description.equals("The request was successfully processed")) {
                     logger.info("The request was successfully processed");
                     value = "successfully";
                 } else {
+                    System.out.println(responseNode);
                     System.out.println("ERROR, The request was NOT successfully processed");
                     logger.info("ERROR, The request was NOT successfully processed");
                     value = "ERROR";
                 }
             } else {
+                System.out.println(responseNode);
                 System.out.println("ERROR: Missing or invalid enrollmentResults in the response");
                 logger.info("ERROR: Missing or invalid enrollmentResults in the response");
                 value = "ERROR";

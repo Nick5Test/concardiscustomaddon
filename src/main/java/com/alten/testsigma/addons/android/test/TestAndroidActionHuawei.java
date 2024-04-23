@@ -50,12 +50,8 @@ public class TestAndroidActionHuawei {
         SetKey6Android action = new SetKey6Android();
         action.setCf(new TestData("BRMBBA85S01F205R"));
         action.setPan(new TestData("4532200085801459"));
-        action.setKey6(new TestData("613748"));
+        action.setKey6(new TestData("168159"));
 
-
-
-        //Element element = new Element("", By.className("android.widget.RadioButton"));
-        //action.setElement(element);
 
         runner.run(action);
 
