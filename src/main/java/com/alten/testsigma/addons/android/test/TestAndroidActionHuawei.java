@@ -1,5 +1,6 @@
 package com.alten.testsigma.addons.android.test;
 
+import com.alten.testsigma.addons.android.InsertCVV;
 import com.alten.testsigma.addons.android.SetKey6Android;
 import com.testsigma.sdk.TestData;
 import com.testsigma.sdk.runners.ActionRunner;
@@ -46,12 +47,15 @@ public class TestAndroidActionHuawei {
         action.setPhoneNumber(new TestData("3482140383"));
         action.setPanAliasList(new TestData("0100000900257320"));*/
 
-
+        /*
         SetKey6Android action = new SetKey6Android();
         action.setCf(new TestData("BRMBBA85S01F205R"));
         action.setPan(new TestData("4532200085801459"));
         action.setKey6(new TestData("168159"));
+        */
 
+        InsertCVV action = new InsertCVV();
+        action.setCODE(new TestData("123"));
 
         runner.run(action);
 
