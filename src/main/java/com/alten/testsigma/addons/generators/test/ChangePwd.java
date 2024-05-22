@@ -23,8 +23,8 @@ public class ChangePwd {
 
         NexiPay_newPwd testDataFunction = new NexiPay_newPwd();
 
-        testDataFunction.setUser(new TestDataParameter("tauser1nexipay@gmail.com"));
-        testDataFunction.setNewPassword(new TestDataParameter("Cartasi01"));
+        testDataFunction.setUser(new TestDataParameter("ptstg.excel.mc02@yopmail.com"));
+        testDataFunction.setNewPassword(new TestDataParameter("Cartasi07"));
         TestData testData = testDataFunctionRunner.run(testDataFunction);
     }
 
